@@ -64,3 +64,85 @@ public class JDBCTest01 {
     }
 
 }
+
+
+
+
+
+
+
+-—————————————————————————————————————————————————————————————JDBC处理查询集————————————————————————————————————————————————————————————————————————————
+//新增反射加载驱动
+//新增配置文件加载driver，url，user，password
+
+package JDBC;
+
+import One.Category;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ResourceBundle;
+
+/*
+* select查询结果集处理
+* */
+public class JDBCTest05 {
+    public static void main(String[] args) {
+        Connection conn= null;
+        Statement statement=null;
+
+        ResourceBundle bundle=ResourceBundle.getBundle("jdbc");
+        String driver=bundle.getString("com.jdbc.mysql.Driver");
+        String url=bundle.getString("jdbc:mysql://localhost:3306/bjpowernode");
+        String user=bundle.getString("root");
+        String password=bundle.getString("zlr199875");
+        try {
+            //1.连接驱动：
+            Class.forName(driver);
+            //2.获取连接
+            conn=DriverManager.getConnection(url,user,password);
+            System.out.println("数据库连接对象+ "+conn);
+
+            //3.获取数据库操作对象
+            statement=conn.createStatement();
+
+            //4.执行sql对象：
+            String sql="select *from emp";
+            int count =statement.executeUpdate(sql);
+            System.out.println(count==1?"success":"fail");
+            //5.处理查询结果集
+            /*
+            * body
+            * */
+        } catch (SQLException | ClassNotFoundException e){
+            e.printStackTrace();
+        }finally {
+            try {
+                if (conn!=null){
+                    conn.close();
+                }
+            }catch (SQLException exception ){
+                exception.printStackTrace();
+            }
+
+            try {
+
+                if(statement!=null){
+                    statement.close();
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
